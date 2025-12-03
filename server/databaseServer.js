@@ -279,10 +279,10 @@ function initializeDatabase() {
 
 // --- API Endpoints ---
 
-// Get all products (or search by name, category, subcategory)
+// Get all products (or search by name, category, subcategory, price range)
 app.get('/api/products', (req, res) => {
     console.log(`[GET] /api/products query:`, req.query);
-    const { search, category, subcategory, brand } = req.query;
+    const { search, category, subcategory, brand, min_price, max_price } = req.query;
     let query = `SELECT p.*, c.name as category_name, s.name as subcategory_name 
                  FROM products p 
                  LEFT JOIN categories c ON p.category_id = c.id 
@@ -309,6 +309,19 @@ app.get('/api/products', (req, res) => {
         query += " AND p.brand LIKE ?";
         params.push(`%${brand}%`);
     }
+
+    if (min_price) {
+        query += " AND p.price >= ?";
+        params.push(parseInt(min_price));
+    }
+
+    if (max_price) {
+        query += " AND p.price <= ?";
+        params.push(parseInt(max_price));
+    }
+
+    // Order by price for better presentation
+    query += " ORDER BY p.price ASC";
 
     db.all(query, params, (err, rows) => {
         if (err) {

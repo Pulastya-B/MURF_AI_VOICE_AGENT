@@ -5,6 +5,7 @@ import { createBlob } from '../../services/audioUtils';
 import { generateMurfSpeech } from '../../services/murfService';
 import { VoicePoweredOrb } from '../components/ui/VoicePoweredOrb';
 import { LightRays } from '../components/ui/LightRays';
+import { ProductGrid, Product } from '../components/ui/ProductCard';
 import { useNavigate } from 'react-router-dom';
 
 // --- Configuration ---
@@ -177,13 +178,16 @@ const tools = [
       },
       {
         name: "check_stock",
-        description: "Check stock, price, and details of products. Can search by product name, category (Electronics & Gadgets, Home & Kitchen, Sports & Outdoors, Automotive), or brand (Apple, Samsung, Nike, etc.). Returns product details including category, subcategory, brand, price, and stock availability.",
+        description: "Check stock, price, and details of products. Can filter by product name, category, subcategory, brand, and price range. Use max_price for 'products under X' queries. Returns product details including category, subcategory, brand, price, description, and stock availability.",
         parameters: {
           type: "OBJECT" as any,
           properties: {
-            product_name: { type: "STRING" as any, description: "Name or partial name of the product to search for" },
+            product_name: { type: "STRING" as any, description: "Name or partial name of the product to search for (e.g., 'iPhone', 'MacBook', 'PlayStation')" },
             category: { type: "STRING" as any, description: "Optional: Category name to filter by (e.g., 'Electronics', 'Home & Kitchen', 'Sports', 'Automotive')" },
-            brand: { type: "STRING" as any, description: "Optional: Brand name to filter by (e.g., 'Apple', 'Samsung', 'Nike')" }
+            subcategory: { type: "STRING" as any, description: "Optional: Subcategory name to filter by (e.g., 'Laptops', 'Mobiles', 'Wearables', 'Fitness Gear', 'Kitchen Tools')" },
+            brand: { type: "STRING" as any, description: "Optional: Brand name to filter by (e.g., 'Apple', 'Samsung', 'Nike', 'Dell', 'Sony')" },
+            min_price: { type: "INTEGER" as any, description: "Optional: Minimum price filter in INR (e.g., 10000 for products above ₹10,000)" },
+            max_price: { type: "INTEGER" as any, description: "Optional: Maximum price filter in INR (e.g., 100000 for products under ₹1,00,000 or 1 lakh)" }
           },
           required: []
         }
@@ -328,6 +332,7 @@ const AgentInterface: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [isBotSpeaking, setIsBotSpeaking] = useState(false); // Track when bot is playing audio
+  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]); // Products to display
 
   // --- Refs for Audio & API ---
   const connectionStateRef = useRef<ConnectionState>(ConnectionState.DISCONNECTED);
@@ -725,9 +730,12 @@ const AgentInterface: React.FC = () => {
                   } else if (name === "check_stock") {
                     let productName = (args as any).product_name || '';
                     const category = (args as any).category || '';
+                    const subcategory = (args as any).subcategory || '';
                     const brand = (args as any).brand || '';
+                    const minPrice = (args as any).min_price;
+                    const maxPrice = (args as any).max_price;
 
-                    // Normalize common product name abbreviations
+                    // Normalize common product name abbreviations and search terms
                     const nameMapping: Record<string, string> = {
                       'PS5': 'PlayStation 5',
                       'PS 5': 'PlayStation 5',
@@ -738,13 +746,36 @@ const AgentInterface: React.FC = () => {
                       'Galaxy S24': 'Samsung Galaxy S24 Ultra'
                     };
 
+                    // Normalize subcategory names
+                    const subcategoryMapping: Record<string, string> = {
+                      'laptops': 'Laptops',
+                      'laptop': 'Laptops',
+                      'mobiles': 'Mobiles',
+                      'mobile': 'Mobiles',
+                      'phones': 'Mobiles',
+                      'phone': 'Mobiles',
+                      'smartphones': 'Mobiles',
+                      'wearables': 'Wearables',
+                      'watches': 'Wearables',
+                      'smartwatch': 'Wearables',
+                      'fitness': 'Fitness Gear',
+                      'kitchen': 'Kitchen Tools',
+                      'furniture': 'Furniture',
+                      'decor': 'Décor',
+                      'appliances': 'Appliances'
+                    };
+
                     productName = nameMapping[productName] || productName;
+                    const normalizedSubcategory = subcategoryMapping[subcategory.toLowerCase()] || subcategory;
                     
                     // Build query string
                     const params = new URLSearchParams();
                     if (productName) params.append('search', productName);
                     if (category) params.append('category', category);
+                    if (normalizedSubcategory) params.append('subcategory', normalizedSubcategory);
                     if (brand) params.append('brand', brand);
+                    if (minPrice) params.append('min_price', String(minPrice));
+                    if (maxPrice) params.append('max_price', String(maxPrice));
                     
                     const queryString = params.toString();
                     console.log(`[Tool] Checking stock with filters: ${queryString}`);
@@ -752,6 +783,7 @@ const AgentInterface: React.FC = () => {
                     const data = await response.json();
                     if (data.products && data.products.length > 0) {
                       result = { status: 'found', products: data.products };
+                      // Products will be displayed in the response processing section
                     } else {
                       result = { status: 'not_found', message: 'No products found matching your criteria' };
                     }
@@ -885,22 +917,27 @@ const AgentInterface: React.FC = () => {
                   responseText = result.status === 'success' ? 'Order cancelled successfully' : `Failed to cancel: ${result.message}`;
                 } else if (name === "check_stock") {
                   if (result.status === 'found' && result.products?.length > 0) {
+                    // Always update displayed products with the CURRENT search results
+                    setDisplayedProducts(result.products.slice(0, 5));
+                    
                     if (result.products.length === 1) {
                       const product = result.products[0];
                       const categoryInfo = product.category_name ? ` [${product.category_name}${product.subcategory_name ? ' > ' + product.subcategory_name : ''}]` : '';
                       const brandInfo = product.brand ? ` by ${product.brand}` : '';
-                      responseText = `Product found: ${product.name}${brandInfo}${categoryInfo}. Price: ₹${product.price}, Stock: ${product.stock} units available. Description: ${product.description || 'N/A'}`;
+                      const description = product.description ? ` Description: ${product.description}.` : '';
+                      responseText = `Product found: ${product.name}${brandInfo}${categoryInfo}. Price: ₹${product.price}, Stock: ${product.stock} units available.${description}`;
                     } else {
-                      // Multiple products found - RETURN ALL OF THEM, not just first 5
+                      // Multiple products found - Include descriptions for better context
                       const productList = result.products.map((p: any) => {
                         const brandInfo = p.brand ? ` (${p.brand})` : '';
-                        const categoryInfo = p.subcategory_name ? ` in ${p.subcategory_name}` : '';
-                        return `${p.name}${brandInfo}${categoryInfo} - ₹${p.price} (${p.stock} in stock)`;
+                        const desc = p.description ? ` - ${p.description}` : '';
+                        return `${p.name}${brandInfo}: ₹${p.price}, ${p.stock} in stock${desc}`;
                       }).join('; ');
-                      responseText = `Found ${result.products.length} products. THESE ARE ALL THE PRODUCTS - DO NOT ADD MORE: ${productList}. No other products exist in this search.`;
+                      responseText = `Found ${result.products.length} products. THESE ARE ALL THE PRODUCTS - DO NOT ADD MORE: ${productList}. No other products exist in this search. The product cards are being displayed to the user.`;
                     }
                   } else {
                     responseText = result.message || 'Product not found in our inventory';
+                    setDisplayedProducts([]); // Clear products if none found
                   }
                 } else if (name === "check_refund_status") {
                   if (result.status === 'found') {
@@ -1314,6 +1351,33 @@ const AgentInterface: React.FC = () => {
             </p>
           </div>
         </div>
+
+        {/* Product Cards Display Section */}
+        {displayedProducts.length > 0 && (
+          <div className="flex-shrink-0 px-6 py-4 relative z-20">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3.5 h-3.5 text-cyan-400">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                  </svg>
+                </div>
+                <span className="text-xs font-medium text-cyan-300/80">Products Found</span>
+                <span className="text-[10px] text-cyan-500 bg-cyan-500/10 px-1.5 py-0.5 rounded-full">{displayedProducts.length}</span>
+              </div>
+              <button 
+                onClick={() => setDisplayedProducts([])}
+                className="text-[10px] text-cyan-500/50 hover:text-cyan-400 transition-colors px-2 py-1 rounded hover:bg-charcoal-800/50"
+              >
+                Close
+              </button>
+            </div>
+            <ProductGrid 
+              products={displayedProducts} 
+              onClose={() => setDisplayedProducts([])}
+            />
+          </div>
+        )}
 
         {/* Bottom Section - Chat Window */}
         <div className="flex-1 flex flex-col overflow-hidden mx-6 mb-4 rounded-2xl bg-charcoal-800/20 backdrop-blur-sm">
