@@ -843,7 +843,6 @@ This project is licensed under the MIT License.
 ## 📞 Support
 
 For issues, questions, or feature requests:
-- 📧 Email: support@kreta-bandhu.com
 - 🐛 GitHub Issues: [Create Issue](https://github.com/Surfing-Ninja/MURF_AI_VOICE_AGENT/issues)
 - 💬 Discord: [Join Community](#)
 
