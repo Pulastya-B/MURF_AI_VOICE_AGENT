@@ -31,6 +31,7 @@
   --animate-shine: shine 1s linear infinite;
   --animate-gradient-x: gradient-x 15s ease infinite;
   --animate-gradient-xy: gradient-xy 15s ease infinite;
+  --animate-scale-in: scale-in 0.3s ease-out forwards;
 
   @keyframes glow {
     0% {
@@ -85,6 +86,17 @@
 
     50% {
       background-position: 100% 50%;
+    }
+  }
+
+  @keyframes scale-in {
+    0% {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
   }
 }

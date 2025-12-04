@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useSpring, useMotionValue, useTransform } from 'framer-motion';
-import { ShoppingCart, X, CreditCard, Trash2, Plus, Minus } from 'lucide-react';
+import { ShoppingCart, X, Trash2, Plus, Minus } from 'lucide-react';
 import { Product } from './ProductCard';
 
 export interface CartItem extends Product {
@@ -199,7 +199,7 @@ const PopUpCart: React.FC<PopUpCartProps> = ({
           )}
         </AnimatePresence>
 
-        {/* Total & Checkout Section */}
+        {/* Total & Info Section */}
         <AnimatePresence>
           {isOpen && items.length > 0 && (
             <motion.div
@@ -214,14 +214,13 @@ const PopUpCart: React.FC<PopUpCartProps> = ({
                   <span className="text-xs text-charcoal-400 uppercase tracking-wider">Total</span>
                   <span className="text-xl font-bold text-cyan-400">₹{totalPrice.toLocaleString()}</span>
                 </div>
-                <motion.button 
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 text-white font-semibold text-sm hover:from-cyan-400 hover:to-cyan-500 transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 flex items-center justify-center gap-2"
-                >
-                  <CreditCard size={16} />
-                  <span>Checkout</span>
-                </motion.button>
+                <div className="bg-charcoal-700/50 rounded-xl p-3 border border-charcoal-600/30">
+                  <p className="text-[11px] text-charcoal-300 text-center leading-relaxed">
+                    <span className="text-copper-400 font-medium">💬 Say "checkout my cart"</span>
+                    <br />
+                    <span className="text-charcoal-400">to the AI agent to place your order</span>
+                  </p>
+                </div>
                 <p className="text-[10px] text-charcoal-500 text-center mt-2">
                   {totalItems} item{totalItems !== 1 ? 's' : ''} in cart
                 </p>

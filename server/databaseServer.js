@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import PDFDocument from 'pdfkit';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,6 +15,9 @@ const PORT = 3005;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve static invoices
+app.use('/invoices', express.static(path.join(__dirname, 'invoices')));
 
 // Database Setup
 const dbPath = path.join(__dirname, 'lumina.db');
@@ -59,18 +63,63 @@ function initializeDatabase() {
             FOREIGN KEY (subcategory_id) REFERENCES subcategories(id)
         )`);
 
-        // Orders Table
+        // Orders Table (enhanced)
         db.run(`CREATE TABLE IF NOT EXISTS orders (
-      id TEXT PRIMARY KEY,
-      customer_name TEXT,
-      product_name TEXT,
-      quantity INTEGER,
-      status TEXT,
-      delivery_date TEXT,
-      order_date TEXT,
-      delivery_slot TEXT,
-      discount_code TEXT
-    )`);
+            id TEXT PRIMARY KEY,
+            customer_name TEXT,
+            customer_email TEXT,
+            customer_phone TEXT,
+            customer_address TEXT,
+            status TEXT DEFAULT 'Processing',
+            order_date TEXT,
+            delivery_date TEXT,
+            delivery_slot TEXT,
+            discount_code TEXT,
+            subtotal INTEGER DEFAULT 0,
+            discount_amount INTEGER DEFAULT 0,
+            total_amount INTEGER DEFAULT 0,
+            payment_method TEXT DEFAULT 'COD',
+            invoice_number TEXT
+        )`);
+
+        // Add missing columns to orders table if they don't exist
+        db.run(`ALTER TABLE orders ADD COLUMN customer_email TEXT`, (err) => {
+            // Ignore error if column already exists
+        });
+        db.run(`ALTER TABLE orders ADD COLUMN customer_phone TEXT`, (err) => {
+            // Ignore error if column already exists
+        });
+        db.run(`ALTER TABLE orders ADD COLUMN customer_address TEXT`, (err) => {
+            // Ignore error if column already exists
+        });
+        db.run(`ALTER TABLE orders ADD COLUMN subtotal INTEGER DEFAULT 0`, (err) => {
+            // Ignore error if column already exists
+        });
+        db.run(`ALTER TABLE orders ADD COLUMN discount_amount INTEGER DEFAULT 0`, (err) => {
+            // Ignore error if column already exists
+        });
+        db.run(`ALTER TABLE orders ADD COLUMN total_amount INTEGER DEFAULT 0`, (err) => {
+            // Ignore error if column already exists
+        });
+        db.run(`ALTER TABLE orders ADD COLUMN payment_method TEXT DEFAULT 'COD'`, (err) => {
+            // Ignore error if column already exists
+        });
+        db.run(`ALTER TABLE orders ADD COLUMN invoice_number TEXT`, (err) => {
+            // Ignore error if column already exists
+        });
+
+        // Order Items Table (for multiple items per order)
+        db.run(`CREATE TABLE IF NOT EXISTS order_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            order_id TEXT,
+            product_id INTEGER,
+            product_name TEXT,
+            product_price INTEGER,
+            quantity INTEGER,
+            subtotal INTEGER,
+            FOREIGN KEY (order_id) REFERENCES orders(id),
+            FOREIGN KEY (product_id) REFERENCES products(id)
+        )`);
 
         // Customers Table
         db.run(`CREATE TABLE IF NOT EXISTS customers (
@@ -444,6 +493,306 @@ app.post('/api/orders', (req, res) => {
             });
         });
         stmt.finalize();
+    });
+});
+
+// Checkout Cart - Place order with multiple items
+app.post('/api/orders/checkout', async (req, res) => {
+    console.log(`[POST] /api/orders/checkout body:`, req.body);
+    const { customer_name, customer_email, customer_phone, address, items, payment_method } = req.body;
+
+    if (!items || items.length === 0) {
+        return res.json({ status: 'error', message: 'Cart is empty. Add items to cart first.' });
+    }
+
+    if (!customer_name) {
+        return res.json({ status: 'error', message: 'Customer name is required.' });
+    }
+
+    if (!address) {
+        return res.json({ status: 'error', message: 'Delivery address is required.' });
+    }
+
+    const orderId = `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
+    const invoiceNumber = `INV-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderDate = new Date().toISOString().split('T')[0];
+    const orderTime = new Date().toISOString();
+
+    // Calculate delivery date (3-5 days for standard delivery)
+    const delivery = new Date();
+    delivery.setDate(delivery.getDate() + Math.floor(Math.random() * 3) + 3);
+    const deliveryDate = delivery.toISOString().split('T')[0];
+
+    // Calculate totals
+    let subtotal = 0;
+    items.forEach(item => {
+        subtotal += item.price * item.quantity;
+    });
+
+    // Apply discount if applicable (10% for orders above ₹10,000)
+    let discountAmount = 0;
+    if (subtotal >= 10000) {
+        discountAmount = Math.floor(subtotal * 0.1);
+    }
+
+    const totalAmount = subtotal - discountAmount;
+
+    // Return policy
+    const returnPolicy = {
+        eligible: true,
+        days: 30,
+        policy: "30-day easy return policy. Products must be unused and in original packaging.",
+        refundMethod: "Original payment method (7-10 business days)",
+        exceptions: "Electronics: 7-day replacement only. Personal items: Non-returnable."
+    };
+
+    // Prepare inserted items list
+    const insertedItems = items.map(item => ({
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        subtotal: item.price * item.quantity
+    }));
+
+    try {
+        // Insert Order into database
+        await new Promise((resolve, reject) => {
+            db.run(`
+                INSERT INTO orders (
+                    id, customer_name, customer_email, customer_phone, customer_address,
+                    status, order_date, delivery_date, subtotal, discount_amount, 
+                    total_amount, payment_method, invoice_number
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `, [
+                orderId, customer_name, customer_email || '', customer_phone || '', address,
+                'Processing', orderDate, deliveryDate, subtotal, discountAmount,
+                totalAmount, payment_method || 'COD', invoiceNumber
+            ], function(err) {
+                if (err) reject(err);
+                else resolve(this);
+            });
+        });
+
+        console.log(`[Checkout] Order ${orderId} inserted into database`);
+
+        // Insert order items
+        for (const item of items) {
+            const itemSubtotal = item.price * item.quantity;
+            await new Promise((resolve, reject) => {
+                db.run(`
+                    INSERT INTO order_items (order_id, product_id, product_name, product_price, quantity, subtotal)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                `, [orderId, item.id || null, item.name, item.price, item.quantity, itemSubtotal], 
+                function(err) {
+                    if (err) reject(err);
+                    else resolve(this);
+                });
+            });
+
+            // Update stock if product has ID
+            if (item.id) {
+                await new Promise((resolve, reject) => {
+                    db.run("UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?", 
+                        [item.quantity, item.id, item.quantity],
+                        function(err) {
+                            if (err) reject(err);
+                            else resolve(this);
+                        });
+                });
+            }
+        }
+
+        console.log(`[Checkout] ${items.length} order items inserted`);
+
+        // Generate PDF Invoice
+        const invoicesDir = path.join(__dirname, 'invoices');
+        if (!fs.existsSync(invoicesDir)) {
+            fs.mkdirSync(invoicesDir, { recursive: true });
+        }
+
+        const invoicePath = path.join(invoicesDir, `${invoiceNumber}.pdf`);
+        
+        // Create PDF with promise
+        await new Promise((resolve, reject) => {
+            const doc = new PDFDocument({ margin: 50 });
+            const writeStream = fs.createWriteStream(invoicePath);
+            
+            writeStream.on('finish', () => {
+                console.log(`[Checkout] Invoice PDF generated: ${invoicePath}`);
+                resolve();
+            });
+            writeStream.on('error', reject);
+            
+            doc.pipe(writeStream);
+
+            // Invoice Header
+            doc.fontSize(24).fillColor('#c87d4a').text('Kreta-Bandhu', { align: 'center' });
+            doc.fontSize(10).fillColor('#666').text('Your Trusted Shopping Partner', { align: 'center' });
+            doc.moveDown();
+
+            // Invoice Details Box
+            doc.fontSize(18).fillColor('#333').text('INVOICE', { align: 'center' });
+            doc.moveDown(0.5);
+            
+            doc.fontSize(10).fillColor('#666');
+            doc.text(`Invoice No: ${invoiceNumber}`, { align: 'right' });
+            doc.text(`Order ID: ${orderId}`, { align: 'right' });
+            doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`, { align: 'right' });
+            doc.moveDown();
+
+            // Customer Details
+            doc.fontSize(12).fillColor('#333').text('Bill To:', { underline: true });
+            doc.fontSize(10).fillColor('#444');
+            doc.text(`Name: ${customer_name}`);
+            doc.text(`Address: ${address}`);
+            if (customer_phone) doc.text(`Phone: ${customer_phone}`);
+            if (customer_email) doc.text(`Email: ${customer_email}`);
+            doc.moveDown();
+
+            // Items Table Header
+            doc.fontSize(11).fillColor('#333');
+            const tableTop = doc.y;
+            doc.text('Item', 50, tableTop, { width: 200 });
+            doc.text('Qty', 260, tableTop, { width: 50, align: 'center' });
+            doc.text('Price', 320, tableTop, { width: 80, align: 'right' });
+            doc.text('Total', 410, tableTop, { width: 80, align: 'right' });
+            
+            doc.moveTo(50, doc.y + 5).lineTo(550, doc.y + 5).stroke('#ddd');
+            doc.moveDown(0.5);
+
+            // Items
+            doc.fontSize(10).fillColor('#444');
+            insertedItems.forEach(item => {
+                const itemY = doc.y;
+                doc.text(item.name, 50, itemY, { width: 200 });
+                doc.text(item.quantity.toString(), 260, itemY, { width: 50, align: 'center' });
+                doc.text(`Rs.${item.price.toLocaleString()}`, 320, itemY, { width: 80, align: 'right' });
+                doc.text(`Rs.${item.subtotal.toLocaleString()}`, 410, itemY, { width: 80, align: 'right' });
+                doc.moveDown(0.5);
+            });
+
+            doc.moveTo(50, doc.y + 5).lineTo(550, doc.y + 5).stroke('#ddd');
+            doc.moveDown();
+
+            // Totals
+            doc.fontSize(10).fillColor('#444');
+            doc.text(`Subtotal:`, 320, doc.y, { width: 80, align: 'right' });
+            doc.text(`Rs.${subtotal.toLocaleString()}`, 410, doc.y - 12, { width: 80, align: 'right' });
+            doc.moveDown(0.3);
+            
+            if (discountAmount > 0) {
+                doc.fillColor('#22c55e').text(`Discount (10%):`, 320, doc.y, { width: 80, align: 'right' });
+                doc.text(`-Rs.${discountAmount.toLocaleString()}`, 410, doc.y - 12, { width: 80, align: 'right' });
+                doc.moveDown(0.3);
+            }
+
+            doc.fontSize(12).fillColor('#c87d4a');
+            doc.text(`Total:`, 320, doc.y, { width: 80, align: 'right' });
+            doc.text(`Rs.${totalAmount.toLocaleString()}`, 410, doc.y - 14, { width: 80, align: 'right' });
+            doc.moveDown(1.5);
+
+            // Payment & Delivery Info
+            doc.fontSize(10).fillColor('#666');
+            doc.text(`Payment Method: ${payment_method || 'Cash on Delivery'}`);
+            doc.text(`Expected Delivery: ${deliveryDate}`);
+            doc.moveDown();
+
+            // Return Policy
+            doc.fontSize(9).fillColor('#888');
+            doc.text('Return Policy: ' + returnPolicy.policy, { width: 450 });
+            doc.moveDown(2);
+
+            // Footer
+            doc.fontSize(8).fillColor('#aaa');
+            doc.text('Thank you for shopping with Kreta-Bandhu!', { align: 'center' });
+            doc.text('For support: 1800-123-4567 | support@kreta-bandhu.com', { align: 'center' });
+
+            doc.end();
+        });
+
+        // Send success response
+        console.log(`[Checkout] Order ${orderId} completed successfully`);
+        res.json({
+            status: 'success',
+            message: `Order placed successfully!`,
+            order: {
+                order_id: orderId,
+                invoice_number: invoiceNumber,
+                invoice_url: `/invoices/${invoiceNumber}.pdf`,
+                customer_name: customer_name,
+                delivery_address: address,
+                order_date: orderDate,
+                order_time: orderTime,
+                expected_delivery: deliveryDate,
+                delivery_slot: 'Standard Delivery (9 AM - 9 PM)',
+                status: 'Processing',
+                items: insertedItems,
+                item_count: items.length,
+                subtotal: subtotal,
+                discount: discountAmount,
+                total: totalAmount,
+                payment_method: payment_method || 'Cash on Delivery',
+                return_policy: returnPolicy,
+                support: {
+                    phone: '1800-123-4567',
+                    email: 'support@kreta-bandhu.com',
+                    hours: '9 AM - 9 PM IST'
+                },
+                tracking: {
+                    status: 'Order Confirmed',
+                    message: 'Your order has been confirmed and will be processed shortly.',
+                    next_update: 'You will receive shipping updates via SMS/Email'
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error('[Checkout] Error:', error);
+        res.status(500).json({ status: 'error', message: 'Failed to process checkout: ' + error.message });
+    }
+});
+
+// Get Order with Items (Full Details)
+app.get('/api/orders/:id/full', (req, res) => {
+    const { id } = req.params;
+    console.log(`[GET] /api/orders/${id}/full`);
+    
+    db.get("SELECT * FROM orders WHERE id = ?", [id], (err, order) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (!order) {
+            res.json({ status: 'not_found', message: 'Order not found' });
+            return;
+        }
+
+        // Get order items
+        db.all("SELECT * FROM order_items WHERE order_id = ?", [id], (err, items) => {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+
+            // Calculate return eligibility (30 days from order date)
+            const orderDate = new Date(order.order_date);
+            const now = new Date();
+            const daysSinceOrder = Math.floor((now - orderDate) / (1000 * 60 * 60 * 24));
+            const returnEligible = daysSinceOrder <= 30;
+
+            res.json({
+                status: 'found',
+                order: {
+                    ...order,
+                    items: items || [],
+                    return_policy: {
+                        eligible: returnEligible,
+                        days_remaining: returnEligible ? 30 - daysSinceOrder : 0,
+                        policy: "30-day easy return. Products must be unused and in original packaging."
+                    }
+                }
+            });
+        });
     });
 });
 
