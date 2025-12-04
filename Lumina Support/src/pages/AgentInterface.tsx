@@ -100,6 +100,12 @@ RULES:
 10. **Tool Usage**: NEVER hallucinate. Always use the appropriate tool.
 11. **NO HALLUCINATION**: ONLY mention products returned by check_stock. Never invent products.
 12. **SPEAKING STYLE**: Speak naturally with pauses. Don't rush.
+13. **CART vs ORDERS - CRITICAL DISTINCTION**:
+    - CART: Items user wants to buy but hasn't ordered yet. Use view_cart, add_to_cart, remove_from_cart tools.
+    - ORDERS: Already placed/confirmed purchases with Order IDs (like ORD-12345). Use search_order tool.
+    - When user asks "why is my cart empty?" → Just say the cart is empty, suggest adding products. Do NOT ask for order number.
+    - When user asks "add X to cart" → Use add_to_cart tool directly. Do NOT ask for order number.
+    - Only ask for Order ID when user asks about tracking, status, refunds, or cancellation of an EXISTING ORDER.
 
 When user says "checkout", "order my cart", "place order for cart items" → use checkout_cart for ALL cart items.
 When user says "add X to cart" → use add_to_cart.
@@ -334,7 +340,7 @@ const tools = [
       // --- CART TOOLS ---
       {
         name: "view_cart",
-        description: "View all items currently in the user's shopping cart with quantities, prices, and total. Use this when user asks 'what's in my cart', 'show cart', 'cart summary'.",
+        description: "View the user's shopping cart contents, quantities, prices and total. Use when user asks 'what's in my cart', 'show my cart', 'cart contents'. This is NOT for tracking orders - cart is items waiting to be purchased.",
         parameters: {
           type: "OBJECT" as any,
           properties: {},
@@ -343,11 +349,11 @@ const tools = [
       },
       {
         name: "add_to_cart",
-        description: "Add a product to the shopping cart. Search for the product first using check_stock if needed.",
+        description: "Add a product to the shopping cart by product name. The tool will search for the product automatically. Use when user says 'add X to cart', 'I want X in my cart'. Does NOT require order ID - this is for adding new items to purchase.",
         parameters: {
           type: "OBJECT" as any,
           properties: {
-            product_name: { type: "STRING" as any, description: "Name of the product to add" },
+            product_name: { type: "STRING" as any, description: "Name of the product to add (e.g., 'iPhone 15 Pro', 'Air Fryer')" },
             quantity: { type: "INTEGER" as any, description: "Quantity to add (default: 1)" }
           },
           required: ["product_name"]
@@ -355,7 +361,7 @@ const tools = [
       },
       {
         name: "remove_from_cart",
-        description: "Remove an item from the shopping cart.",
+        description: "Remove an item from the shopping cart by product name. Does NOT require order ID - this is for removing items before checkout.",
         parameters: {
           type: "OBJECT" as any,
           properties: {
@@ -366,7 +372,7 @@ const tools = [
       },
       {
         name: "update_cart_quantity",
-        description: "Update the quantity of an item in the cart. Use 0 to remove the item.",
+        description: "Update the quantity of an item already in the cart. Use 0 to remove the item completely.",
         parameters: {
           type: "OBJECT" as any,
           properties: {
@@ -392,7 +398,7 @@ const tools = [
       },
       {
         name: "clear_cart",
-        description: "Clear all items from the shopping cart.",
+        description: "Empty the entire shopping cart, removing all items. Use when user wants to start fresh.",
         parameters: {
           type: "OBJECT" as any,
           properties: {},
@@ -1362,9 +1368,9 @@ const AgentInterface: React.FC = () => {
                     const itemsList = result.items.map((item: any) => 
                       `${item.name} (Qty: ${item.quantity}, ₹${item.price} each)`
                     ).join(', ');
-                    responseText = `Cart contains ${result.item_count} items: ${itemsList}. Total: ₹${result.total}`;
+                    responseText = `Shopping cart contains ${result.item_count} items: ${itemsList}. Total: ₹${result.total}. This is the cart, not an order yet.`;
                   } else if (result.status === 'empty') {
-                    responseText = result.message || 'The cart is currently empty.';
+                    responseText = 'The shopping cart is empty. No items have been added yet. Would you like to browse products or add something to your cart?';
                   } else {
                     responseText = 'Unable to retrieve cart contents.';
                   }
@@ -1407,6 +1413,8 @@ const AgentInterface: React.FC = () => {
                   } else {
                     responseText = `Checkout failed: ${result.message}`;
                   }
+                } else if (name === "clear_cart") {
+                  responseText = result.message || 'Cart has been cleared.';
                 }
 
                 // Send Tool Response
