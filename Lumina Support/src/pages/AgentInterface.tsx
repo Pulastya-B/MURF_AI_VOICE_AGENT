@@ -1742,7 +1742,7 @@ const AgentInterface: React.FC = () => {
       </header>
 
       {/* Cart - Below Navbar, in corner - Hidden when products are displayed */}
-      <div className={`absolute top-[60px] right-4 transition-all duration-300 ${
+      <div className={`absolute top-[70px] right-4 pt-2 transition-all duration-300 ${
         displayedProducts.length > 0 ? 'z-10 opacity-50 pointer-events-none' : 'z-30'
       }`}>
         <PopUpCart
