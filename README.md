@@ -1,26 +1,60 @@
-# 🌟 क्रेता-बन्धु (Customer Support Agent)
-### Next-Generation AI Voice Assistant with Native Audio Streaming
+# 🌟 क्रेता-बन्धु (Kreta-Bandhu)
+### Next-Generation AI Voice-First Customer Support Agent
 
-![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge) ![Gemini](https://img.shields.io/badge/Gemini-2.5_Flash-blue?style=for-the-badge) ![Murf](https://img.shields.io/badge/Murf-Falcon_TTS-FF6B35?style=for-the-badge) ![React](https://img.shields.io/badge/React-TypeScript-61DAFB?style=for-the-badge) ![Node](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge) ![Gemini](https://img.shields.io/badge/Gemini-2.5_Flash_Native_Audio-4285F4?style=for-the-badge) ![Murf](https://img.shields.io/badge/Murf-Falcon_TTS-FF6B35?style=for-the-badge) ![React](https://img.shields.io/badge/React_19-TypeScript-61DAFB?style=for-the-badge) ![Tailwind](https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge) ![Node](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge)
 
-A revolutionary customer support AI agent featuring **Gemini 2.5 Flash** for intelligence, **Murf Falcon TTS** for ultra-realistic voice synthesis, real-time voice interruption, intelligent product discovery, and a stunning copper-cyan visual theme with OGL-powered WebGL effects.
+A revolutionary **voice-first** customer support AI agent featuring **Gemini 2.5 Flash Native Audio** for bidirectional voice streaming, **Murf Falcon TTS** for ultra-realistic voice synthesis, real-time voice interruption, intelligent shopping cart management, PDF invoice generation, and a stunning copper-cyan visual theme with OGL-powered WebGL effects.
+
+> 🎙️ **Voice-First Architecture**: Unlike traditional chatbots, क्रेता-बन्धु is designed from the ground up for voice interaction. Users speak naturally, the agent responds with human-like speech powered by **Murf Falcon TTS**.
 
 ---
 
 ## 🎯 Key Features
 
-### 🗣️ **Natural Voice Conversations**
-- **Murf Falcon TTS**: Ultra-realistic, human-like voice synthesis with natural intonation and emotion
-- **Gemini Native Audio**: Direct audio-to-audio processing for understanding user speech
-- **Immediate Barge-In**: Interrupt the agent anytime - it stops instantly (local voice activity detection)
-- **Ultra-Low Latency**: <100ms response time using Web Audio API and AudioWorklet
-- **Natural Flow**: Maintains context across multiple turns like a real conversation
+### 🎤 **Murf Falcon TTS - Premium Voice Synthesis**
+> ⭐ **FLAGSHIP FEATURE**: The heart of क्रेता-बन्धु's voice experience
+
+- **Ultra-Realistic Speech**: Murf Falcon delivers human-like voice synthesis with natural intonation, emotion, and cadence
+- **Sub-200ms Latency**: Optimized streaming for real-time conversations
+- **Voice Customization**: Configure voice, style, speed, pitch, and emphasis
+- **Multilingual Support**: 20+ languages with native accents
+- **Consistent Quality**: Professional-grade 48kHz audio output
+
+**Why Murf Falcon?**
+```
+Traditional TTS:  Robotic → Unnatural pauses → Monotone → Poor user experience
+Murf Falcon TTS:  Natural → Human emotion → Conversational → Delightful UX
+```
+
+### 🗣️ **Gemini 2.5 Flash Native Audio**
+- **Direct Audio-to-Audio**: User's voice → Gemini (native audio understanding) → Tool calls
+- **Bidirectional Streaming**: Real-time WebSocket connection for instant responses
+- **No Transcription Lag**: Audio processed natively without intermediate STT step
+- **Context Awareness**: Maintains conversation context across multiple turns
+
+### ⚡ **Immediate Barge-In (Interruption)**
+- **Local Voice Activity Detection**: AudioWorklet-based RMS analysis
+- **<50ms Response Time**: Interrupt the agent mid-sentence, it stops IMMEDIATELY
+- **Seamless Recovery**: Agent acknowledges interruption and continues naturally
+
+### 🛒 **Smart Shopping Cart System**
+- **Real-time Cart Management**: Add, remove, update quantities via voice
+- **Stock Validation**: Agent checks available stock before adding items
+- **Visual Cart UI**: Slide-out cart with product images and totals
+- **Checkout with PDF Invoice**: Professional invoice generation
 
 ### 🛍️ **Smart Product Discovery**
 - **52+ Products** across 4 main categories with 14 subcategories
 - **Multi-criteria Search**: Filter by name, category, subcategory, or brand
 - **Browse Mode**: Explore categories and subcategories interactively
 - **Zero Hallucination**: Agent only mentions products that actually exist in the database
+- **Real-time Stock Info**: Always shows current availability
+
+### 🧾 **Professional Invoice Generation**
+- **Clean PDF Design**: Professional invoices with Kreta-Bandhu branding
+- **Automatic Generation**: Invoices created on checkout and direct orders
+- **Table Layout**: Itemized products with quantities and prices
+- **Download Ready**: Accessible via API endpoint
 
 ### 🎨 **Stunning Visual Experience**
 - **OGL-Powered Voice Orb**: Real-time WebGL orb with solar flares and copper/cyan color scheme
@@ -28,15 +62,22 @@ A revolutionary customer support AI agent featuring **Gemini 2.5 Flash** for int
 - **Hyperspace Loader**: Cinematic warp-speed loading screen with brand colors
 - **Custom Cursor**: Interactive cursor with particle trails
 - **Glassmorphic UI**: Modern blur effects with copper (#c87d4a) and cyan (#00d9ff) accents
+- **LetterGlitch Background**: Matrix-style animated text effect (About Devs page)
+- **TextShuffle Animation**: GSAP-powered text reveal with Devanagari support
+- **Holographic Profile Cards**: 3D CSS card effects with glow animations
 
-### 🤖 **Intelligent Agent Capabilities**
-- **13 Built-in Tools**: Order management, product search, refunds, customer profiles, and more
-- **Autonomous Decision Making**: Knows when to call APIs vs. provide direct answers
-- **Context-Aware**: Remembers customer preferences, addresses, and order history
-- **Multi-Language**: Supports English and Hindi (brand: क्रेता-बन्धु)
+### 🤖 **19+ Intelligent Agent Tools**
+- **Order Management**: Place, cancel, track, schedule delivery
+- **Cart Operations**: Add, remove, update, view, checkout with stock validation
+- **Product Discovery**: Search, browse categories/subcategories, check stock
+- **Customer Profiles**: Create, retrieve, update customer information
+- **Financial Tools**: Refunds, invoices, discount codes
+- **Feedback System**: Ratings and comments collection
 
 ### 🔧 **Developer-Friendly**
-- **TypeScript**: Full type safety across the stack
+- **React 19 + TypeScript**: Full type safety with latest React features
+- **Tailwind CSS 4**: Modern utility-first styling
+- **GSAP + Framer Motion**: Professional animations
 - **Modular Architecture**: Clean separation of concerns
 - **Easy Customization**: Well-documented code with clear component structure
 - **SQLite Database**: Zero-config database that just works
@@ -97,54 +138,92 @@ flowchart TB
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Structure (Updated)
 
 ```
 Customer Support Agent/
-├── 📁 Lumina Support/          # Frontend Application
+│
+├── 📁 Lumina Support/              # Frontend Application (React 19 + TypeScript)
 │   ├── 📁 src/
-│   │   ├── 📁 components/      # Reusable UI Components
-│   │   │   ├── ChatMessageBubble.tsx
-│   │   │   └── Header.tsx
-│   │   ├── 📁 components/ui/   # WebGL & Visual Effects
-│   │   │   ├── VoicePoweredOrb.tsx      # Main voice orb (OGL)
-│   │   │   ├── LightRays.tsx            # Background light rays
-│   │   │   ├── HyperspaceLoader.tsx     # Loading screen
-│   │   │   ├── CustomCursor.tsx         # Interactive cursor
-│   │   │   ├── BlurFade.tsx             # Blur animations
-│   │   │   ├── DottedSurface.tsx        # Dotted background
-│   │   │   ├── GlowingEffect.tsx        # Glow effects
-│   │   │   └── HolographicCard.tsx      # Card components
-│   │   ├── 📁 pages/
-│   │   │   ├── AgentInterface.tsx       # Main voice agent UI
-│   │   │   └── LandingPage.tsx          # Home page
-│   │   ├── 📁 services/
-│   │   │   ├── audioUtils.ts            # Audio processing utilities
-│   │   │   └── murfService.ts           # Murf AI integration (legacy)
+│   │   ├── 📁 components/          # Core UI Components
+│   │   │   ├── BlurFade.tsx           # Blur fade animations
+│   │   │   ├── CustomCursor.tsx       # Interactive cursor with trails
+│   │   │   ├── DottedSurface.tsx      # Dotted background pattern
+│   │   │   ├── FuturisticBackground.tsx
+│   │   │   ├── GlowingEffect.tsx      # Glow effects
+│   │   │   ├── HolographicCard.tsx    # 3D card components
+│   │   │   └── TubelightNavbar.tsx    # Navigation bar
+│   │   │
+│   │   ├── 📁 components/ui/       # Advanced UI Components
+│   │   │   ├── CartFolder.tsx         # Cart folder animation
+│   │   │   ├── CartFolder.css         # Cart folder styles
+│   │   │   ├── ClickSpark.tsx         # Click spark effects
+│   │   │   ├── HyperspaceLoader.tsx   # Warp-speed loading screen
+│   │   │   ├── LetterGlitch.tsx       # Matrix-style text animation (NEW)
+│   │   │   ├── LightRays.tsx          # OGL light rays background
+│   │   │   ├── PopUpCart.tsx          # Slide-out shopping cart (NEW)
+│   │   │   ├── ProductCard.tsx        # Product display cards
+│   │   │   ├── ProfileCard.tsx        # Holographic dev profile cards (NEW)
+│   │   │   ├── ProfileCard.css        # Profile card styles (NEW)
+│   │   │   ├── TextShuffle.tsx        # GSAP text reveal animation (NEW)
+│   │   │   └── VoicePoweredOrb.tsx    # WebGL voice orb
+│   │   │
+│   │   ├── 📁 pages/               # Application Pages
+│   │   │   ├── AgentInterface.tsx     # Main voice agent UI (2000+ lines)
+│   │   │   ├── LandingPage.tsx        # Home page
+│   │   │   └── AboutDevs.tsx          # About Developers page (NEW)
+│   │   │
+│   │   ├── 📁 lib/                 # Shared libraries
 │   │   ├── 📁 utils/
-│   │   │   └── cn.ts                    # Tailwind class merger
-│   │   ├── App.tsx                      # Root component
-│   │   ├── index.tsx                    # Entry point
-│   │   └── index.css                    # Global styles
+│   │   │   └── cn.ts                  # Tailwind class merger
+│   │   └── index.css               # Global styles
+│   │
+│   ├── 📁 components/              # Root-level components
+│   │   ├── ChatMessageBubble.tsx      # Chat message UI
+│   │   ├── Header.tsx                 # App header
+│   │   └── 📁 ui/
+│   │       ├── loading-screen.tsx
+│   │       ├── spiral-animation.tsx
+│   │       └── voice-powered-orb.tsx
+│   │
+│   ├── 📁 services/                # External Services Integration
+│   │   ├── audioUtils.ts              # Audio processing utilities
+│   │   └── murfService.ts             # Murf TTS API integration
+│   │
+│   ├── 📁 public/images/           # Static assets
+│   ├── App.tsx                     # Root component with routing
+│   ├── index.tsx                   # Entry point
 │   ├── index.html
+│   ├── types.ts                    # TypeScript type definitions
 │   ├── package.json
 │   ├── tsconfig.json
-│   ├── vite.config.ts
+│   ├── vite.config.ts              # Vite configuration
 │   └── postcss.config.js
 │
-├── 📁 server/                   # Backend API Server
-│   ├── databaseServer.js        # Express server + SQLite
-│   ├── lumina.db               # SQLite database file
-│   ├── check_db.js             # Database inspection utility
-│   ├── test_api.js             # API testing script
+├── 📁 server/                      # Backend API Server (Node.js + Express)
+│   ├── databaseServer.js           # Express server + SQLite (19+ endpoints)
+│   ├── aiController.js             # AI controller logic
+│   ├── check_db.js                 # Database inspection utility
+│   ├── test_api.js                 # API testing script
+│   ├── test-deepgram.js            # Deepgram testing
+│   ├── lumina.db                   # SQLite database file
+│   ├── 📁 invoices/                # Generated PDF invoices (NEW)
+│   ├── 📁 public/
+│   │   └── index.html
+│   ├── 📁 scripts/
+│   │   └── ingest.js               # Data ingestion script
+│   ├── DATABASE_UPDATE_SUMMARY.md  # Database changelog
 │   ├── package.json
-│   ├── DATABASE_UPDATE_SUMMARY.md
 │   └── .env
 │
-├── 📁 Design Prompts/          # Design documentation
-├── LLM_INTEGRATION_SUMMARY.md  # AI integration guide
-├── QUICK_START.md              # Quick start guide
-└── README.md                   # This file
+├── 📁 Design Prompt/               # Design Documentation
+│   ├── Hacker Background.txt
+│   ├── Profile Cards.txt
+│   └── Text Animation -Shuffle.txt
+│
+├── package.json                    # Root package.json
+├── QUICK_START.md                  # Quick start guide
+└── README.md                       # This file
 ```
 
 ---
@@ -267,9 +346,9 @@ CREATE TABLE feedback (
 
 ---
 
-## 🛠️ Agent Tools & Capabilities
+## 🛠️ Agent Tools & Capabilities (19+ Tools)
 
-The AI agent has access to 13 powerful tools for handling customer requests:
+The AI agent has access to **19+ powerful tools** for handling customer requests:
 
 ### 📦 **Product & Inventory Tools**
 
@@ -279,12 +358,25 @@ The AI agent has access to 13 powerful tools for handling customer requests:
 | `browse_categories` | List all 4 main product categories | None | "What do you sell?" |
 | `browse_subcategories` | List subcategories (optionally filtered by category) | `category` (optional) | "What electronics do you have?" |
 
+### 🛒 **Shopping Cart Tools** *(NEW)*
+
+| Tool | Description | Parameters | Example Use |
+|------|-------------|------------|-------------|
+| `add_to_cart` | Add product to cart with **stock validation** | `product_id`, `quantity` | "Add 2 iPhones to cart" |
+| `remove_from_cart` | Remove product from cart | `product_id` | "Remove the laptop from cart" |
+| `update_cart_quantity` | Change quantity of item in cart | `product_id`, `quantity` | "Change iPhone quantity to 3" |
+| `view_cart` | Display all items in shopping cart | None | "What's in my cart?" |
+| `checkout_cart` | Process cart checkout with PDF invoice | `customer_name`, `address` | "Checkout my cart" |
+| `clear_cart` | Empty the shopping cart | None | "Clear my cart" |
+
+> ⚠️ **Stock Validation**: The `add_to_cart` tool validates stock availability. If you request 100 units but only 48 are available (minus items already in cart), the agent will inform you: *"Cannot add 100 units of iPhone 15 Pro. Only 48 available."*
+
 ### 🛒 **Order Management Tools**
 
 | Tool | Description | Parameters | Example Use |
 |------|-------------|------------|-------------|
 | `search_order` | Get order status and details | `order_id` | "Track order ORD-12345" |
-| `place_order` | Create a new order | `item_name`, `quantity`, `address`, `customer_name` | "I want to buy an iPhone" |
+| `place_order` | Create order directly (bypasses cart) with **PDF invoice** | `item_name`, `quantity`, `address`, `customer_name` | "I want to buy an iPhone" |
 | `cancel_order` | Cancel a processing order | `order_id` | "Cancel my order" |
 | `update_shipping_address` | Change delivery address | `order_id`, `new_address` | "Change shipping address" |
 | `schedule_delivery` | Set preferred delivery slot | `order_id`, `delivery_slot` | "Deliver between 2-4 PM" |
@@ -296,7 +388,7 @@ The AI agent has access to 13 powerful tools for handling customer requests:
 | `check_refund_status` | Check refund request status | `order_id` | "Where's my refund?" |
 | `create_refund_request` | Initiate refund process | `order_id`, `reason` | "I want to return this" |
 | `apply_discount` | Apply coupon code to order | `order_id`, `code` | "Apply DIWALI2024 code" |
-| `generate_invoice` | Create PDF invoice | `order_id` | "Send me my invoice" |
+| `generate_invoice` | Create/retrieve PDF invoice | `order_id` | "Send me my invoice" |
 
 ### 👤 **Customer Profile Tools**
 
@@ -387,6 +479,68 @@ VITE v5.x ready in XXX ms
 
 ---
 
+## 🎙️ Murf Falcon TTS - Deep Dive
+
+> **Murf Falcon** is the premium text-to-speech engine that powers क्रेता-बन्धु's voice. It delivers **professional-grade, human-like speech** that makes conversations feel natural and engaging.
+
+### **Why Murf Falcon?**
+
+| Feature | Traditional TTS | Murf Falcon |
+|---------|-----------------|-------------|
+| **Naturalness** | Robotic, mechanical | Human-like with emotion |
+| **Intonation** | Flat, monotone | Dynamic, expressive |
+| **Pauses** | Unnatural timing | Natural conversational rhythm |
+| **Latency** | Variable | <200ms streaming |
+| **Quality** | 16-22kHz | 48kHz professional audio |
+
+### **Integration Architecture**
+
+```mermaid
+sequenceDiagram
+    participant G as Gemini 2.5 Flash
+    participant A as AgentInterface
+    participant M as Murf Falcon API
+    participant W as Web Audio API
+    participant S as Speaker
+
+    G->>A: Text Response
+    A->>M: POST /text-to-speech
+    Note over M: Voice: Natalie (US English)<br/>Style: Conversational<br/>Speed: 1.0x
+    M->>A: High-Quality Audio Stream
+    A->>W: Decode Audio Buffer
+    W->>S: 48kHz Playback
+```
+
+### **Murf TTS Configuration**
+
+```typescript
+// services/murfService.ts
+const MURF_CONFIG = {
+  voice: 'en-US-natalie',      // Premium voice
+  style: 'conversational',      // Natural conversation style
+  speed: 1.0,                   // Normal speed
+  pitch: 0,                     // Neutral pitch
+  format: 'mp3',                // Output format
+  sampleRate: 48000             // High-quality audio
+};
+```
+
+### **Voice Options**
+- **Natalie (US)**: Warm, professional female voice (default)
+- **Ryan (US)**: Confident male voice
+- **Aria (UK)**: British English accent
+- **Priya (Indian)**: Hindi-accented English
+- **And 120+ more voices across 20+ languages**
+
+### **Real-time Streaming Flow**
+1. Gemini generates text response
+2. Text sent to Murf Falcon API
+3. Audio streamed back in chunks
+4. Web Audio API decodes and plays immediately
+5. User hears natural speech in <300ms total latency
+
+---
+
 ## 🎨 Visual Features Showcase
 
 ### **1. Voice-Powered Orb**
@@ -428,6 +582,62 @@ VITE v5.x ready in XXX ms
 - Bot messages: Cyan bubbles with 60% opacity (left-aligned)
 - Smooth fade-in animations
 - Auto-scroll to latest message
+
+---
+
+## 🆕 New UI Components
+
+### **1. TextShuffle Animation**
+GSAP-powered text reveal with character scrambling effect.
+
+**Features:**
+- **Devanagari Support**: Uses `Intl.Segmenter('hi')` for proper grapheme clustering
+- **Loop Animation**: Continuous looping with configurable delay
+- **Customizable**: Speed, delay, trigger options
+
+```tsx
+<TextShuffle 
+  text="क्रेता-बन्धु" 
+  loop={true} 
+  loopDelay={3000}
+  className="text-4xl text-cyan-400"
+/>
+```
+
+### **2. LetterGlitch Background**
+Matrix-style animated text effect for cyberpunk aesthetics.
+
+**Features:**
+- Bright green gradient colors (#0a4a2e → #22c55e)
+- Random character animation
+- Canvas-based for performance
+
+```tsx
+<LetterGlitch
+  glitchColors={['#0a4a2e', '#1a5f3f', '#0e8a4d', '#22c55e']}
+  glitchSpeed={80}
+  centerVignette={true}
+/>
+```
+
+### **3. Holographic Profile Cards**
+3D CSS cards with glow effects for developer profiles.
+
+**Features:**
+- Tilt effect on hover
+- Holographic gradient overlay
+- Role badges and skill tags
+- Social media links
+
+### **4. PopUpCart (Slide-out Cart)**
+Full shopping cart interface with agent synchronization.
+
+**Features:**
+- Real-time sync with agent cart state
+- Product images and descriptions
+- Quantity adjustment
+- Total calculation
+- Checkout integration
 
 ---
 
@@ -617,6 +827,58 @@ GET  /api/orders/:id/invoice
 
 ---
 
+## 🧾 Invoice Generation System
+
+क्रेता-बन्धु automatically generates professional PDF invoices for all orders.
+
+### **Invoice Features**
+- **Clean Professional Design**: Kreta-Bandhu branding with copper accent color
+- **Itemized Table**: Product name, quantity, unit price, line total
+- **Automatic Numbering**: `INV-{timestamp}` format
+- **PDF Format**: Download-ready via API endpoint
+- **Dual Generation**: Created on both `place_order` and `checkout_cart`
+
+### **Invoice Structure**
+```
+┌─────────────────────────────────────────────────┐
+│  🧾 INVOICE                                      │
+│  ───────────────────────────────────────────────│
+│  Invoice #: INV-1733000000000                   │
+│  Date: December 3, 2025                         │
+│  Order ID: ORD-1733000000000                    │
+│  ───────────────────────────────────────────────│
+│  Bill To:                                       │
+│  Customer Name                                  │
+│  Delivery Address Line 1                        │
+│  ───────────────────────────────────────────────│
+│  Item              Qty    Price      Total      │
+│  ─────────────────────────────────────────────  │
+│  iPhone 15 Pro      2    ₹119,900   ₹239,800   │
+│  AirPods Pro        1    ₹24,900    ₹24,900    │
+│  ─────────────────────────────────────────────  │
+│                          TOTAL:     ₹264,700    │
+│  ───────────────────────────────────────────────│
+│  Thank you for shopping with Kreta-Bandhu!      │
+│  For support: support@kreta-bandhu.com          │
+└─────────────────────────────────────────────────┘
+```
+
+### **API Endpoints**
+```http
+# Generate invoice for existing order
+GET /api/orders/:order_id/invoice
+
+# Place order (auto-generates invoice)
+POST /api/orders
+→ Returns: { order_id, invoice_number, invoice_url }
+
+# Checkout cart (auto-generates invoice)
+POST /api/orders/checkout
+→ Returns: { order_id, invoice_number, invoice_url }
+```
+
+---
+
 ## 🔬 Technical Deep Dive
 
 ### **Audio Pipeline**
@@ -637,34 +899,41 @@ AudioWorklet (PCM Processor)
         ↓
     WebSocket to Gemini
         ↓
-    [Gemini Speech Recognition & Understanding]
+    [Gemini 2.5 Flash Native Audio Understanding]
 ```
 
-**Output Flow (Agent → User):**
+**Output Flow (Agent → User via Murf Falcon):**
 ```
 [Gemini Text Response]
     ↓
-Murf Falcon TTS API
-    ├─→ Voice: Natalie (US English)
-    ├─→ Style: Conversational
-    ├─→ Speed: 1.0x
-    └─→ Format: MP3/WAV
+┌─────────────────────────────────────────┐
+│         🎙️ MURF FALCON TTS              │
+│  ┌─────────────────────────────────┐    │
+│  │ • Voice: Natalie (US English)   │    │
+│  │ • Style: Conversational         │    │
+│  │ • Speed: 1.0x                   │    │
+│  │ • Quality: 48kHz Professional   │    │
+│  │ • Emotion: Natural intonation   │    │
+│  │ • Latency: <200ms               │    │
+│  └─────────────────────────────────┘    │
+└─────────────────────────────────────────┘
         ↓
-    Fetch Audio Buffer
+    High-Quality Audio Stream
         ↓
     Web Audio API Decode
         ↓
     AudioBufferSource
         ↓
-    Speaker Output (High-Quality 48kHz)
+    Speaker Output (Crystal Clear 48kHz)
 ```
 
-**Why Murf Falcon TTS?**
-- **Ultra-Realistic Voice**: Human-like intonation, emotion, and naturalness
-- **Low Latency**: Optimized for real-time conversations (<200ms synthesis)
-- **Multilingual**: Supports 20+ languages with native accents
-- **Customizable**: Control pitch, speed, emphasis, and pauses
-- **Consistent Quality**: Professional-grade audio every time
+**Why Murf Falcon TTS is Essential:**
+- 🎯 **Ultra-Realistic Voice**: Human-like intonation, emotion, and naturalness that makes conversations feel real
+- ⚡ **Low Latency**: Optimized for real-time conversations (<200ms synthesis time)
+- 🌍 **Multilingual**: Supports 20+ languages with native accents
+- 🎛️ **Customizable**: Control pitch, speed, emphasis, and pauses
+- 🏆 **Consistent Quality**: Professional-grade audio every time
+- 💬 **Conversational Style**: Specifically tuned for customer support interactions
 
 ---
 
@@ -801,13 +1070,18 @@ echo "web: node databaseServer.js" > Procfile
 
 | Metric | Value |
 |--------|-------|
-| **Audio Latency** | <100ms (mic to speaker) |
+| **Audio Latency (Mic → Gemini)** | <100ms |
+| **Murf TTS Synthesis** | <200ms |
+| **Total Voice Response** | <500ms |
 | **Interruption Response** | <50ms (voice detection to audio stop) |
-| **UI Frame Rate** | 60 FPS (orb + light rays) |
+| **UI Frame Rate** | 60 FPS (orb + light rays + effects) |
 | **Bundle Size** | ~450KB (gzipped) |
 | **Database Query Time** | <5ms (average) |
+| **Invoice Generation** | <100ms |
 | **WebSocket Reconnect** | <2s |
 | **Memory Usage** | ~150MB (browser) |
+| **Agent Tools** | 19+ integrated tools |
+| **Products Catalog** | 52+ items |
 
 ---
 
@@ -831,12 +1105,14 @@ This project is licensed under the MIT License.
 
 ## 🙏 Acknowledgments
 
-- **Google Gemini Team** for the incredible 2.5 Flash model with native audio understanding
-- **Murf AI** for the ultra-realistic Falcon TTS engine
-- **OGL Library** for lightweight WebGL framework
-- **Tailwind CSS** for the styling system
-- **Framer Motion** for smooth animations
-- **Vite** for blazing-fast development
+- **🎙️ Murf AI** for the incredible **Falcon TTS engine** - the voice that brings क्रेता-बन्धु to life with human-like speech synthesis
+- **🧠 Google Gemini Team** for the revolutionary 2.5 Flash model with native audio understanding
+- **🎨 OGL Library** for lightweight, powerful WebGL framework
+- **⚛️ React Team** for React 19 with improved performance
+- **🎨 Tailwind CSS** for the v4.0 styling system
+- **🎬 GSAP** for professional-grade animations
+- **🎭 Framer Motion** for smooth UI animations
+- **⚡ Vite** for blazing-fast development
 
 ---
 
@@ -848,6 +1124,24 @@ For issues, questions, or feature requests:
 
 ---
 
+## 🏗️ Tech Stack Summary
+
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| **Frontend** | React 19 + TypeScript | UI Framework |
+| **Styling** | Tailwind CSS 4 | Utility-first CSS |
+| **Voice Input** | Gemini 2.5 Flash Native Audio | Speech Understanding |
+| **Voice Output** | **Murf Falcon TTS** | Human-like Speech Synthesis |
+| **Animations** | GSAP + Framer Motion | Professional Effects |
+| **WebGL** | OGL Library | Voice Orb & Light Rays |
+| **Backend** | Node.js + Express | REST API |
+| **Database** | SQLite | Data Storage |
+| **Build Tool** | Vite | Development & Build |
+
+---
+
 **Built with ❤️ and ☕ by the क्रेता-बन्धु Team**
+
+*Powered by Murf Falcon TTS for human-like voice interactions*
 
 *Last Updated: December 3, 2025*
