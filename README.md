@@ -159,19 +159,19 @@ Customer Support Agent/
 │   │   │   ├── CartFolder.css         # Cart folder styles
 │   │   │   ├── ClickSpark.tsx         # Click spark effects
 │   │   │   ├── HyperspaceLoader.tsx   # Warp-speed loading screen
-│   │   │   ├── LetterGlitch.tsx       # Matrix-style text animation (NEW)
+│   │   │   ├── LetterGlitch.tsx       # Matrix-style text animation 
 │   │   │   ├── LightRays.tsx          # OGL light rays background
-│   │   │   ├── PopUpCart.tsx          # Slide-out shopping cart (NEW)
+│   │   │   ├── PopUpCart.tsx          # Slide-out shopping cart 
 │   │   │   ├── ProductCard.tsx        # Product display cards
-│   │   │   ├── ProfileCard.tsx        # Holographic dev profile cards (NEW)
-│   │   │   ├── ProfileCard.css        # Profile card styles (NEW)
-│   │   │   ├── TextShuffle.tsx        # GSAP text reveal animation (NEW)
+│   │   │   ├── ProfileCard.tsx        # Holographic dev profile cards 
+│   │   │   ├── ProfileCard.css        # Profile card styles 
+│   │   │   ├── TextShuffle.tsx        # GSAP text reveal animation 
 │   │   │   └── VoicePoweredOrb.tsx    # WebGL voice orb
 │   │   │
 │   │   ├── 📁 pages/               # Application Pages
 │   │   │   ├── AgentInterface.tsx     # Main voice agent UI (2000+ lines)
 │   │   │   ├── LandingPage.tsx        # Home page
-│   │   │   └── AboutDevs.tsx          # About Developers page (NEW)
+│   │   │   └── AboutDevs.tsx          # About Developers page
 │   │   │
 │   │   ├── 📁 lib/                 # Shared libraries
 │   │   ├── 📁 utils/
@@ -207,7 +207,7 @@ Customer Support Agent/
 │   ├── test_api.js                 # API testing script
 │   ├── test-deepgram.js            # Deepgram testing
 │   ├── lumina.db                   # SQLite database file
-│   ├── 📁 invoices/                # Generated PDF invoices (NEW)
+│   ├── 📁 invoices/                # Generated PDF invoices
 │   ├── 📁 public/
 │   │   └── index.html
 │   ├── 📁 scripts/
@@ -358,7 +358,7 @@ The AI agent has access to **19+ powerful tools** for handling customer requests
 | `browse_categories` | List all 4 main product categories | None | "What do you sell?" |
 | `browse_subcategories` | List subcategories (optionally filtered by category) | `category` (optional) | "What electronics do you have?" |
 
-### 🛒 **Shopping Cart Tools** *(NEW)*
+### 🛒 **Shopping Cart Tools**
 
 | Tool | Description | Parameters | Example Use |
 |------|-------------|------------|-------------|
