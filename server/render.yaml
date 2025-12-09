@@ -9,9 +9,7 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 18.18.0
-      - key: PORT
-        value: 3005
-    disk:
-      name: sqlite-data
-      mountPath: /opt/render/project/src
-      sizeGB: 1
+      - key: TURSO_DATABASE_URL
+        value: libsql://lumina-db-pulastya.aws-ap-south-1.turso.io
+      - key: TURSO_AUTH_TOKEN
+        value: eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NjQ5NDAyMTAsImlkIjoiYjE1NGI4YjUtMzU1Mi00Yzk4LThkNGEtNWU1NWFiYTU5ZDdhIiwicmlkIjoiMDViNzExZmItZTBlMy00MTg4LWJkOTAtMGVmOTY4ZmQzMTdjIn0.TqzcuqL7mpdUDKoElSomM1AgtbU66LpZAdDmUxqEn-dTk2ilMpb0wllOyt5AuiCDXKf3o_k9azgrVGNI952CAw
