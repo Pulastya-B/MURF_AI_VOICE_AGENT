@@ -1103,6 +1103,20 @@ app.post('/api/feedback', async (req, res) => {
     }
 });
 
+// Health check endpoint
+app.get('/', (req, res) => {
+    res.json({ 
+        status: 'online',
+        message: 'Kreta-Bandhu Backend API is running',
+        endpoints: {
+            categories: '/api/categories',
+            subcategories: '/api/subcategories',
+            products: '/api/products',
+            orders: '/api/orders'
+        }
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Database Server running on http://localhost:${PORT}`);
 });
